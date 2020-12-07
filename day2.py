@@ -32,7 +32,7 @@ def passwordDetector():
       #        f"Char: {char}\n"+
       #        f"Password: {password}")
 
-        if isValid1(int(maxVal),int(minVal),char,password):
+        if isValid2(int(maxVal),int(minVal),char,password):
             count += 1
 
     return count
@@ -44,6 +44,24 @@ def isValid1(maxVal, minVal, char, string):
 
     return occurances <= maxVal and occurances >= minVal
 
+def isValid2(pos1,pos2,char,string):
+    #we need to perform an exclusive or on two bits., dictated by positios 
+    #1 and 2 
+    #logic:
+        # create two variables, bit1 and bit2. if, pos 1 matches the char
+        #set bit1, if pos2 matches the position
+    
+    bit1 = 0
+    bit2 = 0
+
+    if string[pos1-1] == char:
+        bit1 = 1
+    if string[pos2-1] == char:
+        bit2 = 1
+
+    return bool(bit1 ^ bit2)
+
+    
 
 def takeNum(line_iter):
 
