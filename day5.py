@@ -69,13 +69,6 @@ def main():
 
         prev = cur
 
-        
-
-
-
-
-
-
 
 if __name__ == "__main__":
 
