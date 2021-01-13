@@ -37,151 +37,62 @@ def find_occupied(data):
 
     return count
 
-def is_fillable(data,i,j):
+def find_occupied2(data):
+    data,change = model2(data)
 
-    fillable = False
+    while change:
 
-    if i == 0 and j == 0:
+        data,change = model2(data)
 
-        if data[i][j+1] != "#" and \
-            data[i+1][j] != "#" and \
-                data[i+1][j+1] != "#":
-                fillable = True
-        
-    elif i == 0 and j == len(data[i]) - 1:
+    count = 0
+    for row in data:
+        for space in row:
+            if space == "#":
+                count += 1
 
-        if data[i][j-1] != "#" and \
-            data[i+1][j] != "#" and \
-                data[i+1][j-1] != "#":
-                fillable = True
-        
-    elif i == len(data) - 1 and j == 0:
+    return count
 
-        if data[i-1][j] != "#" and \
-            data[i-1][j+1] != "#" and \
-                data[i][j+1] != "#":
-                fillable = True
+def count_filled(data,i,j):
 
-    elif i == len(data) - 1 and j == len(data[i]) - 1:
+    nocc = 0
+    R = len(data)
+    C = len(data[0])
 
-        if data[i-1][j] != "#" and \
-            data[i-1][j-1] != "#" and \
-                data[i][j-1] != "#":
-                fillable = True
+    #iterate around the element in question by offsetting the idicies.
 
-    elif i == 0:
-        
-        if data[i][j-1] != "#" and \
-            data[i][j+1] != "#" and \
-                data[i+1][j] != "#" and \
-                    data[i+1][j+1] != "#" and \
-                        data[i+1][j-1] != "#":
-                        fillable = True
+    for di in [-1,0,1]:
+        for dj in [-1,0,1]:
+            if not (di == 0 and dj == 0):
+                ii = i + di
+                jj = j + dj
+                #after offset, make sure that the new indicies are within the bounds,
+                #such that we want have an out of bounds error
+                
 
-    elif i == len(data) - 1:
+                if 0<=ii<R and 0<=jj<C and data[ii][jj] == "#":
+                    nocc += 1
 
-        if data[i][j-1] != "#" and \
-            data[i][j+1] != "#" and \
-                data[i-1][j] != "#" and \
-                    data[i-1][j+1] != "#" and \
-                        data[i-1][j-1] != "#":
-                        fillable = True
 
-    elif j == 0:
+    return nocc
 
-        if data[i-1][j] != "#" and \
-            data[i-1][j+1] != "#" and \
-                data[i][j+1] != "#" and \
-                    data[i+1][j+1] != "#" and \
-                        data[i+1][j] != "#":
-                        fillable = True
-
-    elif j == len(data[i]) - 1:
-
-        if data[i-1][j] != "#" and \
-            data[i-1][j-1] != "#" and \
-                data[i][j-1] != "#" and \
-                    data[i+1][j-1] != "#" and \
-                        data[i+1][j] != "#":
-                        fillable = True
-
-    else:
-        if data[i-1][j] != "#" and \
-            data[i-1][j-1] != "#" and \
-                data[i][j-1] != "#" and \
-                    data[i+1][j-1] != "#" and \
-                        data[i+1][j] != "#" and \
-                            data[i+1][j+1] != "#" and \
-                                data[i][j+1] != "#" and \
-                                    data[i-1][j+1] != "#":
-                                    fillable = True
-
-    return fillable
-
-def is_emptyable(data,i,j):
-
-    fill_count = 0
-    valid_seats = None
-
-    if i == 0 and j == 0:
-
-        valid_seats = [data[i][j+1],data[i+1][j],data[i+1][j+1]]
-
-    elif i == 0 and j == len(data[i]) - 1:
-
-        valid_seats = [data[i][j-1],data[i+1][j],data[i+1][j-1]]
-
-    elif i == len(data) - 1 and j == 0:
-
-        valid_seats = [data[i-1][j],data[i-1][j+1],data[i][j+1]]
-
-    elif i == len(data) - 1 and j == len(data[i]) - 1:
-
-        valid_seats = [data[i-1][j],data[i-1][j-1],data[i][j-1]]
-
-    elif i == 0:
-
-        valid_seats = [data[i][j-1],data[i][j+1],data[i+1][j],data[i+1][j+1],data[i+1][j-1]]
-
-    elif i == len(data) - 1:
-
-        valid_seats = [data[i][j-1],data[i][j+1],data[i-1][j],data[i-1][j+1],data[i-1][j-1]]
-
-    elif j == 0:
-
-        valid_seats = [data[i-1][j],data[i-1][j+1],data[i][j+1],data[i+1][j+1],data[i+1][j]]
-
-    elif j == len(data[i]) - 1:
-
-        valid_seats = [data[i-1][j],data[i-1][j-1],data[i][j-1],data[i+1][j-1],data[i+1][j]]
-
-    else:
-        valid_seats = [data[i-1][j],data[i-1][j-1],data[i][j-1],data[i+1][j-1],data[i+1][j],data[i+1][j+1],data[i][j+1],data[i-1][j+1]]
-
-    for seat in valid_seats:
-        if seat == "#":
-            fill_count += 1
-
-    return fill_count >= 4
-    
 
 def model(data):
 
     adjustments = 0
-    new_data = [[None] * len(data[0]) for index in range(len(data))]
+    new_data = [["?" for i in range(len(data[0]))] for j in range(len(data))]
 
     for i in range(len(data)):
         for j in range(len(data[i])):
 
             if data[i][j] == "L":
-                if is_fillable(data,i,j):
+                if count_filled(data,i,j) == 0:
                     new_data[i][j] = "#"
                     adjustments += 1
                 else:
                     new_data[i][j] = data[i][j]
 
             elif data[i][j] == "#":
-                if is_emptyable(data,i,j):
+                if count_filled(data,i,j) >= 4:
                     new_data[i][j] = "L"
                     adjustments += 1
                 else:
@@ -191,18 +102,76 @@ def model(data):
 
     return new_data,adjustments
 
+def count_filled2(data,i,j):
+
+    R = len(data)
+    C = len(data[0])
+    nocc = 0
+
+    #check each of the directions for a filled seat
+    #how do we check? each of the directions has specific way that it travels
+    #offset from the current position in a valid direction and check whether or not its
+    #a seat. when we find our first seat or we can no longer iterate, end the traversal
+    #these are just multipliers in the other directions
+
+    for di in [-1,0,1]:
+        for dj in [-1,0,1]:
+            #we can think of each of these unique combinations as direction orientations
+            if not (di == 0 and dj == 0):
+
+                ii = i + di
+                jj = j + dj
+
+                while 0<=ii<R and 0<=jj<C and data[ii][jj] == ".":
+                    ii = ii + di
+                    jj = jj + dj
+
+                if 0<=ii<R and 0<=jj<C and data[ii][jj] == "#":
+                    nocc+=1
+
+    return nocc
+
+
+def model2(data):
+    
+    change = False
+    new_data = [["?" for i in range(len(data[0]))] for j in range(len(data))]
+
+    for i in range(len(data)):
+        for j in range(len(data[i])):
+
+            if data[i][j] == "L":
+                if count_filled2(data,i,j) == 0:
+                    new_data[i][j] = "#"
+                    change = True
+                else:
+                    new_data[i][j] = data[i][j]
+
+            elif data[i][j] == "#":
+                if count_filled2(data,i,j) >= 5:
+                    new_data[i][j] = "L"
+                    change = True
+                else:
+                    new_data[i][j] = data[i][j]
+            else:
+                new_data[i][j] = data[i][j]
+
+    return new_data,change
+
+
+
 def pr(board):
 
     for row in board:
         for elem in row:
-            print(elem,end = " ")
+            print(elem,end = "")
         print()
 
 def main():
 
     data = get_data()
-    num = find_occupied(data)
-    print(num)
+    count = find_occupied2(data)
+    print(count)
 
 if __name__ == "__main__":
     main()
