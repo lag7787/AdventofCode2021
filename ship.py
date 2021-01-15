@@ -34,6 +34,8 @@ class Ship:
 
     def alter_global(self,direction,spaces):
 
+        print(f"direction: {direction} spaces: {spaces}")
+
         if direction == "E":
             self.X += spaces
 
